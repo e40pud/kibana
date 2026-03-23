@@ -118,8 +118,9 @@ xpack.fleet.internal.registry.searchAiLakePackageAllowlistEnabled: true
 
 # Experimental Security Solution features
 
-# Since this config will override values from the "serverless.security.yml" we need to duplicate experimental feature disabled there
-# and add features that specifically disabled in EASE
+# Since array configurations here completely override the values from "serverless.security.yml",
+# we must duplicate all disabled experimental features from the base config
+# in addition to any features specifically disabled in EASE.
 xpack.securitySolution.enableExperimental:
   [
     riskScoreAssistantToolDisabled,
