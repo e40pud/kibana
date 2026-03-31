@@ -435,7 +435,7 @@ export class Plugin implements ISecuritySolutionPlugin {
         taskType: 'chat_completion',
         recommendedEndpoints: [],
       });
-      
+
       plugins.searchInferenceEndpoints.features.register({
         parentFeatureId: 'security_search_inference_parent',
         featureId: 'attack_discovery',
