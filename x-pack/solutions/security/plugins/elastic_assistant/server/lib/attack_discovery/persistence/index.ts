@@ -73,10 +73,12 @@ export class AttackDiscoveryDataClient extends AIAssistantDataClient {
     if (this.adhocAttackDiscoveryDataClient === undefined) {
       throw new Error('`adhocAttackDiscoveryDataClient` is required');
     }
+    const esClient = await this.options.elasticsearchClientPromise;
     return createAttackDiscoveryAlerts({
       adhocAttackDiscoveryDataClient: this.adhocAttackDiscoveryDataClient,
       authenticatedUser,
       createAttackDiscoveryAlertsParams,
+      esClient,
       logger: this.options.logger,
       spaceId: this.spaceId,
     });

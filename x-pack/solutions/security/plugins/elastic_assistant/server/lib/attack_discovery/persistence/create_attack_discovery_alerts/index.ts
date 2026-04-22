@@ -5,11 +5,12 @@
  * 2.0.
  */
 
-import type { AuthenticatedUser, Logger } from '@kbn/core/server';
+import type { AuthenticatedUser, Logger, ElasticsearchClient } from '@kbn/core/server';
 import type {
   AttackDiscoveryApiAlert,
   CreateAttackDiscoveryAlertsParams,
 } from '@kbn/elastic-assistant-common';
+import { ALERT_ATTACK_DISCOVERY_ALERT_IDS } from '@kbn/elastic-assistant-common';
 import { ALERT_UUID } from '@kbn/rule-data-utils';
 import { isEmpty } from 'lodash/fp';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,11 +19,13 @@ import type { IRuleDataClient } from '@kbn/rule-registry-plugin/server';
 import { transformToAlertDocuments } from '../transforms/transform_to_alert_documents';
 import { getCreatedDocumentIds } from './get_created_document_ids';
 import { getCreatedAttackDiscoveryAlerts } from './get_created_attack_discovery_alerts';
+import { updateAlertsWithAttackIds } from '../../schedules/register_schedule/updateAlertsWithAttackIds';
 
 interface CreateAttackDiscoveryAlerts {
   adhocAttackDiscoveryDataClient: IRuleDataClient;
   authenticatedUser: AuthenticatedUser;
   createAttackDiscoveryAlertsParams: CreateAttackDiscoveryAlertsParams;
+  esClient: ElasticsearchClient;
   logger: Logger;
   spaceId: string;
 }
@@ -33,6 +36,7 @@ export const createAttackDiscoveryAlerts = async ({
   adhocAttackDiscoveryDataClient,
   authenticatedUser,
   createAttackDiscoveryAlertsParams,
+  esClient,
   logger,
   spaceId,
 }: CreateAttackDiscoveryAlerts): Promise<AttackDiscoveryApiAlert[]> => {
@@ -108,6 +112,25 @@ export const createAttackDiscoveryAlerts = async ({
       const allErrorDetails = errorDetails.join(', ');
       throw new Error(`Failed to bulk insert Attack discovery alerts ${allErrorDetails}`);
     }
+
+    const alertIdToAttackIdsMap: Record<string, string[]> = {};
+    for (const alertDocument of alertDocuments) {
+      const alertDocId = alertDocument[ALERT_UUID];
+      if (alertDocId) {
+        const underlyingAlertIds =
+          (alertDocument[ALERT_ATTACK_DISCOVERY_ALERT_IDS] as string[]) ?? [];
+        for (const alertId of underlyingAlertIds) {
+          alertIdToAttackIdsMap[alertId] = alertIdToAttackIdsMap[alertId] ?? [];
+          alertIdToAttackIdsMap[alertId].push(alertDocId);
+        }
+      }
+    }
+
+    await updateAlertsWithAttackIds({
+      esClient,
+      alertIdToAttackIdsMap,
+      spaceId,
+    });
 
     logger.debug(
       () =>
