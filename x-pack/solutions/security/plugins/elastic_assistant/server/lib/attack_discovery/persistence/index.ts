@@ -140,6 +140,7 @@ export class AttackDiscoveryDataClient extends AIAssistantDataClient {
       authenticatedUser,
       filter,
       shared,
+      ignoreSharing: findAttackDiscoveryAlertsParams.ignoreSharing,
     });
 
     const result = await findDocuments<AttackDiscoveryAlertDocument>({

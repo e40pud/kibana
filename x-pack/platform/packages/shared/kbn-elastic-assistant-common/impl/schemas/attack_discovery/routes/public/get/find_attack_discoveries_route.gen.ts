@@ -49,6 +49,10 @@ export const AttackDiscoveryFindRequestQuery = lazySchema(() =>
      */
     ids: ArrayFromString(z.string()).optional(),
     /**
+     * If `true`, the response will ignore sharing permissions and return all attack discoveries matching other criteria regardless of who created them or if they are shared.
+     */
+    ignore_sharing: BooleanFromString.optional(),
+    /**
      * If `true`, the response will include `unique_alert_ids` and `unique_alert_ids_count` aggregated across the matched Attack discoveries
      */
     include_unique_alert_ids: BooleanFromString.optional(),

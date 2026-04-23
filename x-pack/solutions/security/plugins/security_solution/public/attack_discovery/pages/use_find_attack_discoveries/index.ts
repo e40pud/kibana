@@ -32,6 +32,7 @@ interface Props {
   includeUniqueAlertIds?: boolean;
   isAssistantEnabled: boolean;
   end?: string;
+  ignoreSharing?: boolean;
   search?: string;
   page?: number;
   perPage?: number;
@@ -74,6 +75,7 @@ export const useFindAttackDiscoveries = ({
   includeUniqueAlertIds = false,
   isAssistantEnabled,
   end,
+  ignoreSharing,
   search,
   page = DEFAULT_PAGE,
   perPage = DEFAULT_PER_PAGE,
@@ -102,6 +104,7 @@ export const useFindAttackDiscoveries = ({
         end,
         include_unique_alert_ids: includeUniqueAlertIds,
         ids,
+        ignore_sharing: ignoreSharing,
         page: pageParam?.page ?? page,
         per_page: pageParam?.perPage ?? perPage,
         search,
@@ -130,6 +133,7 @@ export const useFindAttackDiscoveries = ({
       end,
       http,
       ids,
+      ignoreSharing,
       includeUniqueAlertIds,
       page,
       perPage,
@@ -173,6 +177,7 @@ export const useFindAttackDiscoveries = ({
       connectorNames,
       end,
       ids,
+      ignoreSharing,
       page,
       perPage,
       search,

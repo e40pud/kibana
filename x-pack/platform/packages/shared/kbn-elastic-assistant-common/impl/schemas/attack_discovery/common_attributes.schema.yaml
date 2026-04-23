@@ -265,6 +265,9 @@ components:
           type: array
           items:
             type: string
+        ignoreSharing:
+          description: If `true`, the response will ignore sharing permissions and return all attack discoveries matching other criteria regardless of who created them or if they are shared.
+          type: boolean
         page:
           default: 1
           minimum: 1

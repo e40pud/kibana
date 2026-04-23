@@ -276,6 +276,10 @@ export const FindAttackDiscoveryAlertsParams = lazySchema(() =>
      * filter by Attack discovery IDs
      */
     ids: z.array(z.string()).optional(),
+    /**
+     * If `true`, the response will ignore sharing permissions and return all attack discoveries matching other criteria regardless of who created them or if they are shared.
+     */
+    ignoreSharing: z.boolean().optional(),
     page: z.number().int().min(1).optional().default(1),
     perPage: z.number().int().min(0).optional().default(10),
     /**

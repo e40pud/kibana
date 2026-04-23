@@ -150,6 +150,40 @@ describe('getCombinedFilter', () => {
   });
 
   describe('getCombinedFilter', () => {
+    describe('when ignoreSharing is true', () => {
+      it('returns only the additional filter when filter is defined', () => {
+        const authenticatedUser = {
+          username: 'test_user',
+          profile_uid: '123',
+        } as AuthenticatedUser;
+
+        const result = getCombinedFilter({
+          authenticatedUser,
+          filter: 'foo: "bar"',
+          shared: false,
+          ignoreSharing: true,
+        });
+
+        expect(result).toBe('foo: "bar"');
+      });
+
+      it('returns empty string when filter is undefined', () => {
+        const authenticatedUser = {
+          username: 'test_user',
+          profile_uid: '123',
+        } as AuthenticatedUser;
+
+        const result = getCombinedFilter({
+          authenticatedUser,
+          filter: undefined,
+          shared: false,
+          ignoreSharing: true,
+        });
+
+        expect(result).toBe('');
+      });
+    });
+
     describe('when shared is undefined', () => {
       const shared = undefined;
 

@@ -20,6 +20,7 @@ interface GetFilterParams {
   authenticatedUser: AuthenticatedUser;
   filter?: string;
   shared?: boolean;
+  ignoreSharing?: boolean;
 }
 
 export const getSharedFilter = (shared?: boolean): string => {
@@ -63,7 +64,12 @@ export const getCombinedFilter = ({
   authenticatedUser,
   filter,
   shared,
+  ignoreSharing,
 }: GetFilterParams): string => {
+  if (ignoreSharing) {
+    return filter ?? '';
+  }
+
   const sharedFilter = getSharedFilter(shared);
   const userFilter = getUserFilter({ authenticatedUser, shared });
   const additionalFilter = getAdditionalFilter(filter);

@@ -100,6 +100,7 @@ export const findAttackDiscoveriesRoute = (
               alertIds: query.alert_ids,
               includeUniqueAlertIds: query.include_unique_alert_ids ?? false,
               ids: query.ids,
+              ignoreSharing: query.ignore_sharing,
               search: query.search,
               shared: query.shared,
               status: query.status,
