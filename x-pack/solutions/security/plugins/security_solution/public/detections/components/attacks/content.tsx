@@ -32,6 +32,7 @@ import { useShallowEqualSelector } from '../../../common/hooks/use_selector';
 import { Schedule } from '../../../attack_discovery/pages/header/schedule';
 import { FilterByAssigneesPopover } from '../../../common/components/filter_by_assignees_popover/filter_by_assignees_popover';
 import { PAGE_TITLE } from '../../pages/attacks/translations';
+import { AUTHORS_BUTTON_TITLE, AUTHORS_POPOVER_TOOLTIP } from './translations';
 import { HeaderPage } from '../../../common/components/header_page';
 import { IconSparkles } from '../../../common/icons/sparkles';
 import { SecuritySolutionPageWrapper } from '../../../common/components/page_wrapper';
@@ -114,6 +115,7 @@ export const AttacksPageContent = React.memo(({ dataView }: AttacksPageContentPr
   }, [telemetry]);
   const onCloseSchedulesFlyout = useCallback(() => setShowSchedulesFlyout(false), []);
   const [assignees, setAssignees] = useState<AssigneesIdsSelection[]>([]);
+  const [authors, setAuthors] = useState<AssigneesIdsSelection[]>([]);
 
   const onAssigneesSelectionChange = useCallback(
     (newAssignees: AssigneesIdsSelection[]) => {
@@ -123,6 +125,16 @@ export const AttacksPageContent = React.memo(({ dataView }: AttacksPageContentPr
     },
     [assignees]
   );
+
+  const onAuthorsSelectionChange = useCallback(
+    (newAuthors: AssigneesIdsSelection[]) => {
+      if (!isEqual(newAuthors, authors)) {
+        setAuthors(newAuthors);
+      }
+    },
+    [authors]
+  );
+
   const [statusFilter, setStatusFilter] = useState<Status[]>([]);
   const [pageFilters, setPageFilters] = useState<Filter[]>();
   const [pageFilterHandler, setPageFilterHandler] = useState<FilterGroupHandler | undefined>();
@@ -181,6 +193,15 @@ export const AttacksPageContent = React.memo(({ dataView }: AttacksPageContentPr
                     compressed={true}
                   />
                 </EuiFlexItem>
+                <EuiFlexItem grow={1} data-test-subj="attacks-page-author-filter">
+                  <FilterByAssigneesPopover
+                    selectedUserIds={authors}
+                    onSelectionChange={onAuthorsSelectionChange}
+                    compressed={true}
+                    title={AUTHORS_BUTTON_TITLE}
+                    tooltip={AUTHORS_POPOVER_TOOLTIP}
+                  />
+                </EuiFlexItem>
                 <EuiFlexItem grow={1} data-test-subj={ATTACKS_PAGE_CONNECTOR_FILTER_TEST_ID}>
                   <ConnectorFilter
                     aiConnectors={aiConnectors}
@@ -214,6 +235,7 @@ export const AttacksPageContent = React.memo(({ dataView }: AttacksPageContentPr
         <KPIsSection
           pageFilters={pageFilters}
           assignees={assignees}
+          authors={authors}
           selectedConnectorNames={selectedConnectorNames}
           dataView={dataView}
         />
@@ -224,6 +246,7 @@ export const AttacksPageContent = React.memo(({ dataView }: AttacksPageContentPr
           statusFilter={statusFilter}
           pageFilters={pageFilters}
           assignees={assignees}
+          authors={authors}
           selectedConnectorNames={selectedConnectorNames}
           openSchedulesFlyout={openSchedulesFlyout}
         />

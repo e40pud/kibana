@@ -38,13 +38,21 @@ export interface FilterByAssigneesPopoverProps {
    * Renders a shorter button that matches compressed form controls.
    */
   compressed?: boolean;
+  /**
+   * Optional custom title for the filter button. Defaults to 'Assignees'.
+   */
+  title?: string;
+  /**
+   * Optional custom tooltip for the filter button. Defaults to 'Filter by assignee'.
+   */
+  tooltip?: string;
 }
 
 /**
  * The popover to filter alerts by assigned users
  */
 export const FilterByAssigneesPopover: FC<FilterByAssigneesPopoverProps> = memo(
-  ({ selectedUserIds, onSelectionChange, compressed = false }) => {
+  ({ selectedUserIds, onSelectionChange, compressed = false, title, tooltip }) => {
     const isPlatinumPlus = useLicense().isPlatinumPlus();
     const upsellingMessage = useUpsellingMessage('alert_assignments');
 
@@ -62,6 +70,7 @@ export const FilterByAssigneesPopover: FC<FilterByAssigneesPopoverProps> = memo(
           position="bottom"
           content={
             upsellingMessage ??
+            tooltip ??
             i18n.translate('xpack.securitySolution.filtersGroup.assignees.popoverTooltip', {
               defaultMessage: 'Filter by assignee',
             })
@@ -77,13 +86,22 @@ export const FilterByAssigneesPopover: FC<FilterByAssigneesPopoverProps> = memo(
             hasActiveFilters={selectedUserIds.length > 0}
             numActiveFilters={selectedUserIds.length}
           >
-            {i18n.translate('xpack.securitySolution.filtersGroup.assignees.buttonTitle', {
-              defaultMessage: 'Assignees',
-            })}
+            {title ??
+              i18n.translate('xpack.securitySolution.filtersGroup.assignees.buttonTitle', {
+                defaultMessage: 'Assignees',
+              })}
           </EuiFilterButton>
         </EuiToolTip>
       ),
-      [isPlatinumPlus, isPopoverOpen, selectedUserIds.length, togglePopover, upsellingMessage]
+      [
+        isPlatinumPlus,
+        isPopoverOpen,
+        selectedUserIds.length,
+        togglePopover,
+        upsellingMessage,
+        title,
+        tooltip,
+      ]
     );
 
     return (

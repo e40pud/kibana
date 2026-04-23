@@ -43,7 +43,11 @@ import { AlertsTab } from './attack_details/alerts_tab';
 import { EmptyResultsPrompt } from './empty_results_prompt';
 import { dsl } from '../utils/dsl';
 import { groupingOptions, groupingSettings } from './grouping_settings/grouping_configs';
-import { buildAttacksOnlyFilter, buildConnectorIdFilter } from './filtering_configs';
+import {
+  buildAttacksOnlyFilter,
+  buildConnectorIdFilter,
+  buildAttackAuthorFilter,
+} from './filtering_configs';
 import type { GroupTakeActionItems } from '../../alerts_table/types';
 import { AttacksGroupTakeActionItems } from './attacks_group_take_action_items';
 import { useGroupStats } from './grouping_settings/use_group_stats';
@@ -77,6 +81,10 @@ export interface TableSectionProps {
    */
   assignees: AssigneesIdsSelection[];
   /**
+   * The list of authors to add to the other filters
+   */
+  authors: AssigneesIdsSelection[];
+  /**
    * The list of selected connectors ID to filter the table
    */
   selectedConnectorNames: string[];
@@ -96,6 +104,7 @@ export const TableSection = React.memo(
     statusFilter,
     pageFilters,
     assignees,
+    authors,
     selectedConnectorNames,
     openSchedulesFlyout,
   }: TableSectionProps) => {
@@ -199,6 +208,7 @@ export const TableSection = React.memo(
         ...buildThreatMatchFilter(showOnlyThreatIndicatorAlerts),
         ...(pageFilters ?? []),
         ...buildAlertAssigneesFilter(assignees),
+        ...buildAttackAuthorFilter(authors),
         ...buildConnectorIdFilter(selectedConnectorNames),
         ...(showAttacksOnly ? buildAttacksOnlyFilter() : []),
       ];
@@ -206,6 +216,7 @@ export const TableSection = React.memo(
       showOnlyThreatIndicatorAlerts,
       pageFilters,
       assignees,
+      authors,
       selectedConnectorNames,
       showAttacksOnly,
     ]);
