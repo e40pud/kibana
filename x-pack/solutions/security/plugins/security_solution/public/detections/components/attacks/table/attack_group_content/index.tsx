@@ -17,6 +17,7 @@ import { RuleStatus } from '../../../../../timelines/components/timeline/body/re
 import { Subtitle } from './subtitle';
 import { TagsBadge } from './tags_badge';
 import { AssigneesBadge } from './assignees_badge';
+import { GeneratedByBadge } from './generated_by_badge';
 
 export const EXPAND_BUTTON_ARIAL_LABEL = i18n.translate(
   'xpack.securitySolution.detectionEngine.attacks.tableSection.expandButtonArialLabel',
@@ -104,6 +105,11 @@ export const AttackGroupContent = React.memo<AttackGroupContentProps>(
                     data-test-subj={`${dataTestSubj}${ATTACK_ASSIGNEES_TEST_ID_SUFFIX}`}
                   >
                     <AssigneesBadge assignees={attack.assignees} />
+                  </EuiFlexItem>
+                )}
+                {attack.userId && (
+                  <EuiFlexItem grow={false}>
+                    <GeneratedByBadge userId={attack.userId} />
                   </EuiFlexItem>
                 )}
               </EuiFlexGroup>
